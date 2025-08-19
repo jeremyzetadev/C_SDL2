@@ -3,31 +3,37 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
-#define WINDOW_TITLE "02 CloseWindow"
+#define WINDOW_TITLE "03 Background"
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
+#define IMAGE_FLAGS IMG_INIT_PNG
 
 struct Game {
     SDL_Window *window;
     SDL_Renderer *renderer;
+    SDL_Texture *background;
 };
 
 
 void game_cleanup(struct Game *game, int exit_status);
+bool load_media(struct Game *game);
 bool sdl_initialize(struct Game *game);
 
 int main(){
     // Initialize game window and renderer
     struct Game game = {
         .window = NULL,
-        .renderer = NULL
+        .renderer = NULL,
+        .background = NULL
     };
 
     if (!sdl_initialize(&game)){
         game_cleanup(&game, EXIT_FAILURE);
-        printf("error happened");
-        exit(1);
+    }
+    if (!load_media(&game)){
+        game_cleanup(&game, EXIT_FAILURE);
     }
 
     bool isGameRunning = true;
@@ -51,6 +57,7 @@ int main(){
             }
         }
         SDL_RenderClear(game.renderer);
+        SDL_RenderCopy(game.renderer, game.background, NULL, NULL);
         SDL_RenderPresent(game.renderer);
         SDL_Delay(16);
     }
@@ -62,15 +69,32 @@ int main(){
 }
 
 void game_cleanup(struct Game *game, int exit_status){
+    SDL_DestroyTexture(game->background);
     SDL_DestroyWindow(game->window);
     SDL_DestroyRenderer(game->renderer);
     SDL_Quit();
+    IMG_Quit();
     exit(exit_status);
+}
+
+bool load_media(struct Game *game){
+    game->background = IMG_LoadTexture(game->renderer, "images/background.png");
+    if (!game->background){
+        fprintf(stderr, "Error creating Texture: %s\n", IMG_GetError());
+        return false;
+    }
+    return true;
 }
 
 bool sdl_initialize(struct Game *game){
     if (SDL_Init(SDL_INIT_EVERYTHING)== -1){
         fprintf(stderr, "Error initializing SDL: %s\n", SDL_GetError());
+        return false;
+    }
+
+    int img_init = IMG_Init(IMAGE_FLAGS);
+    if ((img_init & IMAGE_FLAGS) != IMAGE_FLAGS){
+        fprintf(stderr, "Error initializing SDL_image: %s\n", IMG_GetError());
         return false;
     }
 
