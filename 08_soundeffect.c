@@ -13,7 +13,7 @@
 #include <time.h>
 #include <stdlib.h>
 
-#define WINDOW_TITLE "06 Sound Effects"
+#define WINDOW_TITLE "08 Sound Effects"
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
 #define IMAGE_FLAGS IMG_INIT_PNG
