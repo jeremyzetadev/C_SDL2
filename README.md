@@ -5,3 +5,6 @@
 Install SDL_Image library
 <img width="1201" height="347" alt="image" src="https://github.com/user-attachments/assets/4a666327-ca59-4ed3-aa80-cf2e361e3084" />
 
+# run 05_text
+Install SDL_ttf library
+<img width="990" height="459" alt="image" src="https://github.com/user-attachments/assets/58237e89-57d3-4e3c-b058-aa6887759d68" />
